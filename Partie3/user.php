@@ -24,6 +24,7 @@ class User {
   }
 
   public function hydrate(array $data) {
+    $methodCalled = 0;
     // For each value in the array of data
     foreach ($data as $key => $value){
       // Create a method string with the key
@@ -32,8 +33,14 @@ class User {
       if (method_exists($this, $method)){
         // Executre method with value from data
         $this->$method($value);
+        $methodCalled++;
       }
     }
+    // Check if array if empty or not
+    if ($methodCalled === 0){
+      return false;
+    } // Else
+    return true;
   }
 
   public function __construct(array $data) {

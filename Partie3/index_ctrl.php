@@ -1,11 +1,18 @@
 <?php include 'classLoader.php';
 $manager = new UserManager;
-
+if (session_status() == PHP_SESSION_NONE){
+  session_start();
+}
 // Forms
 $error = false; $errorMessage = '_ERROR_';
 $valid = false; $validMessage = '_ERROR_';
-$username = null;
+$username = null; $userConnected = false;
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+  if (isset($_POST['disconnect'])){
+    session_destroy();
+    header('Location: /Partie3/index.php');
+    exit();
+  }
   if (isset($_POST['username']) && ! empty(trim($_POST['username']))){
     $username = trim($_POST['username']);
     $username = filter_var($username, FILTER_SANITIZE_STRING);
@@ -20,18 +27,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $errorMessage = 'Username input must be filled !'; $error = true;
     return;
   }
+  $user = new User(['name'=>$username]);
   // Check which button the user pressed
   if (isset($_POST['create'])){
-    $user = new User(['name'=>$username]);
     if ($manager->userExists($user)){
       $errorMessage = 'Name already taken !'; $error = true;
       return;
     }
     if (! $manager->addUser($user)){
-      $errorMessage = 'Name already taken !'; $error = true;
+      $errorMessage = 'Error with the database, please retry later'; $error = true;
       return;
     }
     $validMessage = 'Account registered ! Please <u>connect</u> to continue.'; $valid = true;
-    // return;
+    return;
+  }
+  if (isset($_POST['use'])){
+    if (! $manager->userExists($user)){
+      $errorMessage = 'Username unknown, please retry or create an account.'; $error = true;
+      return;
+    }
+    $userData = $manager->getUser($user);
+    if (! $userData){
+      $errorMessage = 'Error with the database, please retry later'; $error = true;
+      return;
+    }
+    if ($user->hydrate($userData)){
+      $validMessage = 'You are connected, nice to see you !'; $valid = true;
+      $_SESSION['userConnected'] = $user;
+      $userConnected = true;
+    }
   }
 } ?>
