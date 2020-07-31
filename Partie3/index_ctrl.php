@@ -13,6 +13,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: /Partie3/index.php');
     exit();
   }
+  if (isset($_POST['hitPlayer'])){
+    if (isset($_SESSION['userConnected']) && ! empty($_SESSION['userConnected'])){
+      $user = $_SESSION['userConnected'];
+      if (isset($_POST['userToHitId']) && ! empty(trim($_POST['userToHitId']))){
+        $userToHitId = trim($_POST['userToHitId']);
+        $userToHit = new User(['id'=>$userToHitId]);
+        if ($userToHitId > 0 && $manager->userExists($userToHit)){
+          $userToHitData = $manager->getUser($userToHit);
+          if ($userToHit->hydrate($userToHitData)){
+            $combatStatus = $user->hit($userToHit);
+            if ($combatStatus > 1){
+             if ($combatStatus === 3 && $manager->updateUser($userToHit)){
+               $validMessage = 'User hit for 5 damages, well done !'; $valid = true; return;
+             }
+             else if ($combatStatus === 2 && $manager->deleteUser($userToHit)){
+               $validMessage = 'User hit and killed, congratulations on another slaughter !'; $valid = true; return;
+             }
+             else { $errorMessage = 'An error occured, please logout and login again.'; $error = true; return; }
+            } else { $errorMessage = 'You cannot hit yourself !'; $error = true; return; }
+          }
+          else { $errorMessage = 'User to hit to found, please reaload and try again.'; $error = true; return; }
+        }
+        else { $errorMessage = 'User to hit to found, please reaload and try again.'; $error = true; return; }
+      }
+      else { $errorMessage = 'An error occured, please logout and login again.'; $error = true; return; }
+    }
+    else { $errorMessage = 'You must be connected to hit a player'; $error = true; return; }
+  }
   if (isset($_POST['username']) && ! empty(trim($_POST['username']))){
     $username = trim($_POST['username']);
     $username = filter_var($username, FILTER_SANITIZE_STRING);

@@ -12,6 +12,11 @@
     <?php if ($userConnected || isset($_SESSION['userConnected'])){
       if (isset($_SESSION['userConnected'])) { $user = $_SESSION['userConnected']; }?>
       <h3 class="text-center mb-3"><u>Combat Game</u></h3>
+      <?php if ($error) { ?>
+        <h4 class="text-center text-danger py-3"><?= $errorMessage ?></h4>
+      <?php } else if ($valid) { ?>
+        <h4 class="text-center text-success py-3"><?= $validMessage ?></h4>
+      <?php } ?>
       <div class="w-100 d-flex">
         <div class="col-6 bg-secondary pt-2 mr-2" style="border-radius: 0.3rem;">
           <h4 class="text-center text-white"><?=  htmlspecialchars($user->name()) ?></h4>
@@ -24,12 +29,14 @@
           <div class="list-group m-auto w-100">
             <?php foreach ($manager->userList() as $users){
               if ($users['id'] != $user->id()){ ?>
-                <div class="list-group-item d-flex w-100">
-                  <span style="align-self: center;"><?= $users['name'] ?></span>
-                  <form class="ml-auto" action="#" method="post">
-                    <input type="hidden" name="userToHitId" value="<?= $users['id'] ?>">
-                    <input class="btn btn-warning font-weight-bold py-1" type="submit" name="hitPlayer" value="hit !">
-                  </form>
+                <div class="list-group-item w-100">
+                  <div class="d-flex col-12">
+                    <span style="align-self: center;"><?= $users['name'] ?> : <?= $users['damages'] ?>% dmg</span>
+                    <form class="ml-auto d-flex" action="#" method="post">
+                      <input type="hidden" name="userToHitId" value="<?= $users['id'] ?>">
+                      <input class="btn btn-warning font-weight-bold m-auto" type="submit" name="hitPlayer" value="hit !">
+                    </form>
+                  </div>
                 </div>
               <?php } ?>
             <?php } ?>

@@ -9,7 +9,7 @@ class User {
   const USER_HIT = 3;
 
   public function hit(User $userToHit) {
-    if ($this->_id == $perso->id()){
+    if ($this->_id == $userToHit->id()){
       return self::FRIENDLY_FIRE;
     }
     return $userToHit->takeDamage();
