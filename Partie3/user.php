@@ -9,17 +9,18 @@ class User {
   const USER_HIT = 3;
 
   public function hit(User $userToHit) {
-    if ($this->_id == $userToHit->id()){
-      return self::FRIENDLY_FIRE;
-    }
+    // If the personne to hit and the person hitting have the same 'id', return "Friendly fire" const
+    if ($this->_id == $userToHit->id()){ return self::FRIENDLY_FIRE; }
+    // Else, return to the user that it needs to take damage
     return $userToHit->takeDamage();
   }
 
   public function takeDamage() {
+    // Add 5 to own user damages
     $this->_damages += 5;
-    if ($this->_damages > 100){
-      return self::USER_KILLED;
-    }
+    // If its damages are 100 or higher, return that the user is killed
+    if ($this->_damages >= 100){ return self::USER_KILLED; }
+    // Else, return that the user is hit
     return self::USER_HIT;
   }
 
@@ -36,36 +37,22 @@ class User {
         $methodCalled++;
       }
     }
-    // Check if array if empty or not
-    if ($methodCalled === 0){
-      return false;
-    } // Else
+    // Check if array if empty
+    if ($methodCalled === 0){ return false; }
+    // Else
     return true;
   }
 
-  public function __construct(array $data) {
-    $this->hydrate($data);
-  }
+  // Constructor to hydrate the users attributes
+  public function __construct(array $data) { $this->hydrate($data); }
 
   // Getters
-  public function id() {
-    return $this->_id;
-  }
-  public function name() {
-    return $this->_name;
-  }
-  public function damages() {
-    return $this->_damages;
-  }
+  public function id() { return $this->_id; }
+  public function name() { return $this->_name; }
+  public function damages() { return $this->_damages; }
 
-  // Setters
-  public function setId(int $id) {
-    if (is_numeric($id) && $id > 0){ $this->_id = $id; }
-  }
-  public function setName(string $name) {
-    if (is_string($name)){ $this->_name = $name; }
-  }
-  public function setDamages(int $damages) {
-    if (is_numeric($damages) && $damages >= 0 && $damages <= 100){ $this->_damages = $damages; }
-  }
+  // Setters ( check all types before injecting values )
+  public function setId(int $id) { if (is_numeric($id) && $id > 0){ $this->_id = $id; } }
+  public function setName(string $name) { if (is_string($name)){ $this->_name = $name; } }
+  public function setDamages(int $damages) { if (is_numeric($damages) && $damages >= 0 && $damages <= 100){ $this->_damages = $damages; } }
 } ?>
