@@ -1,11 +1,10 @@
 <?php
-class Dbmanager {
+final class Dbmanager {
   // Declare private variable
   private static $_database = null;
 
   // Add user to the database
-  public function addUser(Waiting $user) {
-    var_dump($user);
+  public function addUser(User $user) {
     try {
       // Prepare statement with 'name' and 'damages' as parameters
       $stmt = self::$_database->prepare('INSERT INTO `user` (`name`,`damages`,`asleep_for`,`type`,`special`) VALUES (:name, :damages, :asleep_for, :type, :special)');
@@ -50,7 +49,7 @@ class Dbmanager {
   }
 
   // Get the informations of the single user from the database
-  public function getUser($user) {
+  public function getUser(User $user) {
     try {
       // Check if the id of the user is set
       if ($user->id() !== null){

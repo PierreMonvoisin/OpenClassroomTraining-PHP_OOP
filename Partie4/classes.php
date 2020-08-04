@@ -5,6 +5,7 @@ abstract class User {
   private $_name = 'Pierre';
   // Getter
   public function name(){ return $this->_name; }
+  public function id(){ return $this->id; }
 }
 
 class Players extends User {

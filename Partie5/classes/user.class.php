@@ -1,7 +1,7 @@
 <?php
 abstract class User {
   // Attributes / Properties
-  protected $id, $name, $damages, $asleep_for, $type, $special;
+  protected $id, $name, $damages, $asleep_for, $type;
 
   const FRIENDLY_FIRE = 1;
   const USER_KILLED = 2;
@@ -73,9 +73,5 @@ abstract class User {
   public function setType(string $type){
     if (empty(trim($type)) || ! is_string($type)){ return false; }
     $this->type = trim($type); return true;
-  }
-  public function setSpecial(string $special){
-    if (empty(trim($special)) || ! is_string($special)){ return false; }
-    $this->special = trim($special); return true;
   }
 } ?>

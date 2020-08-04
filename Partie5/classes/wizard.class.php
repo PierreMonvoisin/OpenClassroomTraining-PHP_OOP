@@ -1,19 +1,17 @@
 <?php
 class Wizard extends User {
-  protected $special;
+  protected $spell;
 
-  public function id(){ return $this->id; }
-  public function name(){ return $this->name; }
-  public function damages(){ return $this->damages; }
-  public function asleep_for(){ return $this->asleep_for; }
-  public function type(){ return $this->type; }
+  public function __construct(array $array){
+    PARENT::__construct($array);
+  }
   
   // Getter
-  public function special(){ return $this->special; }
+  public function spell(){ return $this->spell; }
 
   // Setter
-  public function setSpecial(string $special){
-    if (empty(trim($special)) || ! is_string($special)){ return false; }
-    $this->special = trim($special); return true;
+  public function setSpell(string $spell){
+    if (empty(trim($spell)) || ! is_string($spell)){ return false; }
+    $this->spell = trim($spell); return true;
   }
 } ?>

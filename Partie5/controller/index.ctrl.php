@@ -67,18 +67,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
   else { $errorMessage = 'Username input must be filled !'; $error = true; return; }
+
+  $user = new Waiting(['special'=>1,'name'=>$username]);
   // Check which button the user pressed
-  if (! isset($_POST['type']) || empty(trim($_POST['type']))){
-    $errorMessage = 'Select a type of character to continue !'; $error = true;
-    return;
-  }
-  $type = strtolower(trim($_POST['type']));
-  $type = filter_var($type, FILTER_SANITIZE_STRING);
-  if (! in_array($type, $typeArray)){
-    $errorMessage = 'Select a correct type of character to continue !'; $error = true;
-    return;
-  }
-  $user = new Waiting(['special'=>1,'name'=>$username,'type'=>$type]);
   // User wants to create an account
   if (isset($_POST['create'])){
     // Check if user already exists
@@ -86,6 +77,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $errorMessage = 'Name already taken !'; $error = true;
       return;
     }
+    if (! isset($_POST['type']) || empty(trim($_POST['type']))){
+      $errorMessage = 'Select a type of character to continue !'; $error = true;
+      return;
+    }
+    $type = strtolower(trim($_POST['type']));
+    $type = filter_var($type, FILTER_SANITIZE_STRING);
+    if (! in_array($type, $typeArray)){
+      $errorMessage = 'Select a correct type of character to continue !'; $error = true;
+      return;
+    }
+    $user->setType($type);
     // Add user to the database
     if (! $manager->addUser($user)){
       $errorMessage = 'Error with the database, please retry later'; $error = true;
@@ -107,7 +109,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $errorMessage = 'Error with the database, please retry later'; $error = true;
       return;
     }
-    if ($user->hydrate($userData)){
+    $user = new $userData['type']($userData);
+    if ($user){
       // If all info are found, connect the user
       $validMessage = 'You are connected, nice to see you !'; $valid = true;
       // Set its object in the session to serve as a " user connected " check

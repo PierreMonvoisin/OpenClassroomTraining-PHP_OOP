@@ -1,19 +1,17 @@
 <?php
 class Warrior extends User {
-  protected $special;
+  protected $block_chance;
 
-  public function id(){ return $this->id; }
-  public function name(){ return $this->name; }
-  public function damages(){ return $this->damages; }
-  public function asleep_for(){ return $this->asleep_for; }
-  public function type(){ return $this->type; }
-
+  public function __construct(array $array){
+    PARENT::__construct($array);
+  }
+  
   // Getter
-  public function special(){ return $this->special; }
+  public function block_chance(){ return $this->block_chance; }
 
   // Setter
-  public function setSpecial(string $special){
-    if (empty(trim($special)) || ! is_string($special)){ return false; }
-    $this->special = trim($special); return true;
+  public function setBlock_chance(string $block_chance){
+    if (empty(trim($block_chance)) || ! is_string($block_chance)){ return false; }
+    $this->block_chance = trim($block_chance); return true;
   }
 } ?>
