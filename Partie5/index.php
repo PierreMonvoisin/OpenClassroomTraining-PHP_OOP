@@ -49,7 +49,7 @@
                     <?php if ($user->type() === 'wizard'){ ?>
                       <form class="ml-auto d-flex" action="#" method="post">
                         <input type="hidden" name="userToHitId" value="<?= $users['id'] ?>">
-                        <input class="btn btn-info font-weight-bold m-auto" type="submit" name="specialHit" value="spell !">
+                        <input class="btn btn-info font-weight-bold m-auto" type="submit" name="spell" value="spell !">
                       </form>
                     <?php } ?>
                   </div>

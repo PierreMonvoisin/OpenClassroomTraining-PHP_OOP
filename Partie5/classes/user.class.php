@@ -7,14 +7,14 @@ abstract class User {
   const USER_KILLED = 2;
   const USER_HIT = 3;
 
-  public function hit(User $userToHit,int $strength) {
+  public function hit(User $userToHit,int $strength,string $hitType) {
     // If the personne to hit and the person hitting have the same 'id', return "Friendly fire" const
     if ($this->id == $userToHit->id()){ return self::FRIENDLY_FIRE; }
     // Else, return to the user that it needs to take damage
-    return $userToHit->takeDamage($strength);
+    return $userToHit->takeDamage(floatval($strength));
   }
 
-  public function takeDamage(int $strength) {
+  public function takeDamage(float $strength) {
     // Add the strength of the blow to own user damages
     $this->damages += $strength;
     // If its damages are 100 or higher, return that the user is killed
@@ -73,5 +73,9 @@ abstract class User {
   public function setType(string $type){
     if (empty(trim($type)) || ! is_string($type)){ return false; }
     $this->type = trim($type); return true;
+  }
+  public function setSpecial(int $special){
+    if (is_NaN($special) || $special < 0 || $special > 10){ return false; }
+    $this->special = intval($special); return true;
   }
 } ?>

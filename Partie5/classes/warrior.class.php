@@ -4,8 +4,21 @@ class Warrior extends User {
 
   public function __construct(array $array){
     PARENT::__construct($array);
+    $this->setBlock_chance($this->special);
   }
-  
+
+  public function takeDamage(float $strength) {
+    if (rand(0,100) <= ($this->block_chance * 3 + 20)){
+      // Blocked
+    }
+    // Add the strength of the blow to own user damages
+    $this->damages += $strength;
+    // If its damages are 100 or higher, return that the user is killed
+    if ($this->damages >= 100){ return self::USER_KILLED; }
+    // Else, return that the user is hit
+    return self::USER_HIT;
+  }
+
   // Getter
   public function block_chance(){ return $this->block_chance; }
 

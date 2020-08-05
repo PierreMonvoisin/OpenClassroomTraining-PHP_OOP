@@ -20,7 +20,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit();
   }
   // If the user wants to hit another player
-  if (isset($_POST['hitPlayer'])){
+  if (isset($_POST['hitPlayer']) || isset($_POST['spell'])){
+    $hitType = 'default';
+    // Check the type of the hit
+    if (isset($_POST['spell'])){ $hitType = 'spell'; }
     // Check if the user is connected
     if (isset($_SESSION['userConnected']) && ! empty($_SESSION['userConnected'])){
       $user = $_SESSION['userConnected'];
@@ -32,9 +35,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($userToHitId > 0 && $manager->getUser($userToHit)){
           // Get all its informations
           $userToHitData = $manager->getUser($userToHit);
-          if ($userToHit->hydrate($userToHitData)){
+          $userToHit = new $userToHitData['type']($userToHitData);
+          if ($userToHit){
             // Actually hit the other user
-            $combatStatus = $user->hit($userToHit, 5);
+            $combatStatus = $user->hit($userToHit, 5, $hitType);
             if ($combatStatus > 1){
               // If strike went well
               if ($combatStatus === 3 && $manager->updateUser($userToHit)){
