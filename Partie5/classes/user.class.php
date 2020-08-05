@@ -6,6 +6,9 @@ abstract class User {
   const FRIENDLY_FIRE = 1;
   const USER_KILLED = 2;
   const USER_HIT = 3;
+  const USER_KILLED_WITH_SPELL = 4;
+  const USER_HIT_WITH_SPELL = 5;
+  const USER_HIT_AND_ASLEEP = 6;
 
   public function hit(User $userToHit,int $strength,string $hitType) {
     // If the personne to hit and the person hitting have the same 'id', return "Friendly fire" const
@@ -23,6 +26,9 @@ abstract class User {
     return self::USER_HIT;
   }
 
+  public function fallAsleep(int $time,int $timestamp) {
+    return true;
+  }
   // Methods
   public function hydrate(array $data) {
     $methodCalled = 0;

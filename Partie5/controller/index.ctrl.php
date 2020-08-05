@@ -41,10 +41,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $combatStatus = $user->hit($userToHit, 5, $hitType);
             if ($combatStatus > 1){
               // If strike went well
-              if ($combatStatus === 3 && $manager->updateUser($userToHit)){
-                $validMessage = 'User hit for 5 damages, well done !'; $valid = true; return;
+              if ($combatStatus >= 3 && $combatStatus != 4 && $manager->updateUser($userToHit)){
+                if ($combatStatus === 6){
+                  $validMessage = 'User hit and put asleep, perfect !'; $valid = true; return;
+                }
+                if ($combatStatus === 5){
+                  $validMessage = 'User hit with a spell, nice !'; $valid = true; return;
+                }
+                $validMessage = 'User hit, well done !'; $valid = true; return;
               }
-              else if ($combatStatus === 2 && $manager->deleteUser($userToHit)){
+              else if ($combatStatus === 2 || $combatStatus === 4){
+                if ($manager->deleteUser($userToHit)){
+                  if ($combatStatus === 4){
+                    $validMessage = 'User hit and killed with a spell, congratulations on another enchantment !'; $valid = true; return;
+                  }
+                }
                 $validMessage = 'User hit and killed, congratulations on another slaughter !'; $valid = true; return;
               }
               else { $errorMessage = 'An error occured, please logout and login again.'; $error = true; return; }

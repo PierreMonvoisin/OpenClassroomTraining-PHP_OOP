@@ -25,21 +25,13 @@
             <progress id="damagesProgress" class="w-100" style="height: 3vh;" min="0" max="100" value="<?= htmlspecialchars($user->damages()) ?>"> <?= htmlspecialchars($user->damages()) ?> damages </progress>
           </div>
         </div>
-        <?php $bg_color = '#C1C1C1';
-        if ($user->type() == 'wizard'){
-          $bg_color = '#5CC146';
-        }
-        else if ($user->type() == 'warrior'){
-          $bg_color = '#58463C';
-        } ?>
-        <div class="col-5 d-flex text-white py-2" style="background-color: <?= $bg_color ?>;border-radius: 0.3rem;">
-          <h4 class="text-center mx-auto"><u><?= htmlspecialchars(strtoupper($user->type())) ?></u></h4>
-        </div>
         <div class="col-7 d-flex" style="background-color: #C1C1C1; border-radius: 0.3rem;">
-          <div class="list-group m-auto w-100">
+          <div class="list-group m-auto w-100 py-2">
             <?php foreach ($manager->userList() as $users){
-              if ($users['id'] != $user->id()){ ?>
-                <div class="list-group-item w-100">
+              if ($users['id'] != $user->id()){
+                if ($users['type'] == 'wizard'){ $border_color = '#5CC146'; }
+                else if ($users['type'] == 'warrior'){ $border_color = '#58463C'; } ?>
+                <div style="border-left: 8px solid <?= $border_color ?>" class="list-group-item w-100">
                   <div class="d-flex col-12">
                     <span style="align-self: center;"><?= htmlspecialchars($users['name']) ?> : <?= htmlspecialchars($users['damages']) ?>% dmg</span>
                     <form class="ml-auto d-flex" action="#" method="post">
@@ -57,6 +49,16 @@
               <?php } ?>
             <?php } ?>
           </div>
+        </div>
+        <?php $bg_color = '#C1C1C1';
+        if ($user->type() == 'wizard'){
+          $bg_color = '#5CC146';
+        }
+        else if ($user->type() == 'warrior'){
+          $bg_color = '#58463C';
+        } ?>
+        <div class="col-5 d-flex text-white py-2" style="background-color: <?= $bg_color ?>;border-radius: 0.3rem;">
+          <h4 class="text-center mx-auto"><u><?= htmlspecialchars(strtoupper($user->type())) ?></u></h4>
         </div>
       </div>
       <form class="w-100" action="#" method="post">
