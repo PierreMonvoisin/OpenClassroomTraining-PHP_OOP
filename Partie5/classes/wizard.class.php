@@ -19,14 +19,14 @@ class Wizard extends User {
     }
     // Check if asleep
     $hitStatus = $userToHit->takeDamage(floatval($strength));
-    if ($hitStatus[0] === 3){
+    if ($hitStatus[0] === self::USER_KILLED){
       if ($hitType === 'spell'){ return [self::USER_KILLED, self::WITH_SPELL]; }
-      return [self::USER_KILLED];
+      return $hitStatus;
     }
-    if ($hitStatus[0] === 2){
+    if ($hitStatus[0] === self::USER_HIT){
       if ($sleepFor && $userToHit->fallAsleep(floatval($sleepFor))){ return [self::USER_HIT, self::AND_ASLEEP]; }
-      if ($hitType === 'spell'){ return [self::USER_HIT, self::WITH_SPELL]; }
-      return [self::USER_HIT];
+      if ($hitType === 'spell' && count($hitStatus) === 1){ return [self::USER_HIT, self::WITH_SPELL]; }
+      return $hitStatus;
     }
     return false;
   }

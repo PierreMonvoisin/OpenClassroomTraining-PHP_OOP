@@ -39,7 +39,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if ($userToHit){
             // Actually hit the other user
             $combatStatus = $user->hit($userToHit, 5, $hitType);
-            var_dump($userToHit);
             if (count($combatStatus) > 0){
               // If strike went well
               if ($combatStatus[0] === USER::FRIENDLY_FIRE){
