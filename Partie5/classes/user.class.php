@@ -2,17 +2,20 @@
 abstract class User {
   // Attributes / Properties
   protected $id, $name, $damages, $asleep_for, $type;
+  protected $isAsleep = false;
+  private $_special;
 
   const FRIENDLY_FIRE = 1;
-  const USER_KILLED = 2;
-  const USER_HIT = 3;
-  const USER_KILLED_WITH_SPELL = 4;
-  const USER_HIT_WITH_SPELL = 5;
-  const USER_HIT_AND_ASLEEP = 6;
+  const USER_HIT = 2;
+  const USER_KILLED = 3;
+
+  const WITH_SPELL = 100;
+  const AND_ASLEEP = 200;
+  const BLOCKED_HIT = 300;
 
   public function hit(User $userToHit,int $strength,string $hitType) {
     // If the personne to hit and the person hitting have the same 'id', return "Friendly fire" const
-    if ($this->id == $userToHit->id()){ return self::FRIENDLY_FIRE; }
+    if ($this->id == $userToHit->id()){ return [self::FRIENDLY_FIRE]; }
     // Else, return to the user that it needs to take damage
     return $userToHit->takeDamage(floatval($strength));
   }
@@ -21,13 +24,17 @@ abstract class User {
     // Add the strength of the blow to own user damages
     $this->damages += $strength;
     // If its damages are 100 or higher, return that the user is killed
-    if ($this->damages >= 100){ return self::USER_KILLED; }
+    if ($this->damages >= 100){ return [self::USER_KILLED]; }
     // Else, return that the user is hit
-    return self::USER_HIT;
+    return [self::USER_HIT];
   }
 
-  public function fallAsleep(int $time,int $timestamp) {
-    return true;
+  public function fallAsleep(int $time) {
+    if ($time > 0 && $time <= 12){
+      $awakeTime = strtotime('+' .round($time). ' hours');
+      $this->setAsleep_for(intval($awakeTime)); $this->isAsleep = true;
+    }
+    return $this->isAsleep;
   }
   // Methods
   public function hydrate(array $data) {
@@ -57,7 +64,7 @@ abstract class User {
   public function damages(){ return $this->damages; }
   public function asleep_for(){ return $this->asleep_for; }
   public function type(){ return $this->type; }
-  public function special(){ return $this->special; }
+  public function special(){ return $this->_special; }
 
   // Setters
   public function setId(int $id){
@@ -82,6 +89,6 @@ abstract class User {
   }
   public function setSpecial(int $special){
     if (is_NaN($special) || $special < 0 || $special > 10){ return false; }
-    $this->special = intval($special); return true;
+    $this->_special = intval($special); return true;
   }
 } ?>

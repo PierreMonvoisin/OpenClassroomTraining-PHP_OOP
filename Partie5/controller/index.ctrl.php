@@ -39,27 +39,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           if ($userToHit){
             // Actually hit the other user
             $combatStatus = $user->hit($userToHit, 5, $hitType);
-            if ($combatStatus > 1){
+            var_dump($userToHit);
+            if (count($combatStatus) > 0){
               // If strike went well
-              if ($combatStatus >= 3 && $combatStatus != 4 && $manager->updateUser($userToHit)){
-                if ($combatStatus === 6){
-                  $validMessage = 'User hit and put asleep, perfect !'; $valid = true; return;
-                }
-                if ($combatStatus === 5){
-                  $validMessage = 'User hit with a spell, nice !'; $valid = true; return;
-                }
-                $validMessage = 'User hit, well done !'; $valid = true; return;
+              if ($combatStatus[0] === USER::FRIENDLY_FIRE){
+                $errorMessage = 'You can\'t hit yourself !'; $error = true;
+                return;
               }
-              else if ($combatStatus === 2 || $combatStatus === 4){
-                if ($manager->deleteUser($userToHit)){
-                  if ($combatStatus === 4){
+              if ($combatStatus[0] === USER::USER_KILLED && $manager->deleteUser($userToHit)){
+                if (count($combatStatus) > 1){
+                  if ($combatStatus[1] === USER::WITH_SPELL){
                     $validMessage = 'User hit and killed with a spell, congratulations on another enchantment !'; $valid = true; return;
                   }
                 }
                 $validMessage = 'User hit and killed, congratulations on another slaughter !'; $valid = true; return;
               }
+              if ($combatStatus[0] === USER::USER_HIT && $manager->updateUser($userToHit)){
+                if (count($combatStatus) > 1){
+                  if ($combatStatus[1] === USER::WITH_SPELL){
+                    $validMessage = 'User hit with a spell, nice !'; $valid = true; return;
+                  }
+                  if ($combatStatus[1] === USER::AND_ASLEEP){
+                    $validMessage = 'User hit and put asleep, perfect !'; $valid = true; return;
+                  }
+                  if ($combatStatus[1] === USER::BLOCKED_HIT){
+                    $validMessage = 'User blocked the hit for less damage, better luck next time !'; $valid = true; return;
+                  }
+                }
+                $validMessage = 'User hit, well done !'; $valid = true; return;
+              }
               else { $errorMessage = 'An error occured, please logout and login again.'; $error = true; return; }
-            } else { $errorMessage = 'You cannot hit yourself !'; $error = true; return; }
+            } else { $errorMessage = 'An error occured, please logout and login again.'; $error = true; return; }
           }
           else { $errorMessage = 'User to hit to found, please reaload and try again.'; $error = true; return; }
         }
