@@ -13,6 +13,7 @@ abstract class User {
   const AND_ASLEEP = 200;
   const BLOCKED_HIT = 300;
 
+  // Methods
   public function hit(User $userToHit,int $strength,string $hitType) {
     // If the personne to hit and the person hitting have the same 'id', return "Friendly fire" const
     if ($this->id == $userToHit->id()){ return [self::FRIENDLY_FIRE]; }
@@ -36,7 +37,11 @@ abstract class User {
     }
     return $this->isAsleep;
   }
-  // Methods
+
+  public function awaken(){
+
+  }
+
   public function hydrate(array $data) {
     $methodCalled = 0;
     // For each value in the array of data
@@ -56,13 +61,23 @@ abstract class User {
     return true;
   }
 
-  public function __construct(array $data) { $this->hydrate($data); }
+  public function __construct(array $data) {
+    $this->hydrate($data);
+    if ($this->asleep_for === 0 || $this->asleep_for < time()){
+      $this->setAsleep_for(0);
+      $this->isAsleep = false;
+    }
+    else {
+      $this->isAsleep = true;
+    }
+  }
 
   // Getters
   public function id(){ return $this->id; }
   public function name(){ return $this->name; }
   public function damages(){ return $this->damages; }
   public function asleep_for(){ return $this->asleep_for; }
+  public function isAsleep(){ return $this->isAsleep; }
   public function type(){ return $this->type; }
   public function special(){ return $this->_special; }
 

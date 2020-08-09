@@ -29,9 +29,10 @@
           <div class="list-group m-auto w-100 py-2">
             <?php foreach ($manager->userList() as $users){
               if ($users['id'] != $user->id()){
-                if ($users['type'] == 'wizard'){ $border_color = '#5CC146'; }
-                else if ($users['type'] == 'warrior'){ $border_color = '#58463C'; } ?>
-                <div style="border-left: 8px solid <?= $border_color ?>" class="list-group-item w-100">
+                if ($users['type'] == 'wizard'){ $border = 'solid #5CC146'; }
+                else if ($users['type'] == 'warrior'){ $border = 'solid #58463C'; }
+                if ($users['asleep_for'] != 0){ $border = 'dashed #001F24'; } ?>
+                <div style="border-left: 8px <?= $border ?>" class="list-group-item w-100">
                   <div class="d-flex col-12">
                     <span style="align-self: center;"><?= htmlspecialchars($users['name']) ?> : <?= htmlspecialchars($users['damages']) ?>% dmg</span>
                     <form class="ml-auto d-flex" action="#" method="post">

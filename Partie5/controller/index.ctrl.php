@@ -27,6 +27,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     // Check if the user is connected
     if (isset($_SESSION['userConnected']) && ! empty($_SESSION['userConnected'])){
       $user = $_SESSION['userConnected'];
+      if ($user->isAsleep()){
+        $errorMessage = 'You are asleep, wait a bit more before waking up.'; $error = true;
+        return;
+      }
       // Get the id of the user to hit
       if (isset($_POST['userToHitId']) && ! empty(trim($_POST['userToHitId']))){
         $userToHitId = trim($_POST['userToHitId']);
@@ -37,6 +41,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $userToHitData = $manager->getUser($userToHit);
           $userToHit = new $userToHitData['type']($userToHitData);
           if ($userToHit){
+            if ($userToHit->isAsleep()){
+              $errorMessage = 'User asleep, you can\'t hit them right now !'; $error = true;
+              return;
+            }
             // Actually hit the other user
             $combatStatus = $user->hit($userToHit, 5, $hitType);
             if (count($combatStatus) > 0){
