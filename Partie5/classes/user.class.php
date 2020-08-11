@@ -38,8 +38,30 @@ abstract class User {
     return $this->isAsleep;
   }
 
-  public function awaken(){
+  public function isAsleep(){
+    if ($this->asleep_for === 0){
+      $this->isAsleep = false;
+      return $this->isAsleep;
+    }
+    if ($this->asleep_for < time()){
+      $this->setAsleep_for(0);
+      $this->isAsleep = false;
+      if (get_class($this) !== 'Waiting'){
+        if (! isset($manager)){ $manager = new Dbmanager; }
+        $manager->updateUser($this);
+      }
+    }
+    else {
+      $this->isAsleep = true;
+    }
+    return $this->isAsleep;
+  }
 
+  public function displayRevivalDate(){
+    if (! $this->isAsleep()){ return 'User fully awake'; }
+    $revivalDate = date('d - m - Y', $this->asleep_for);
+    $revivalTime = date('H:i:s', $this->asleep_for);
+    return ['date'=>$revivalDate,'time'=>$revivalTime];
   }
 
   public function hydrate(array $data) {
@@ -63,13 +85,7 @@ abstract class User {
 
   public function __construct(array $data) {
     $this->hydrate($data);
-    if ($this->asleep_for === 0 || $this->asleep_for < time()){
-      $this->setAsleep_for(0);
-      $this->isAsleep = false;
-    }
-    else {
-      $this->isAsleep = true;
-    }
+    $this->isAsleep();
   }
 
   // Getters
@@ -77,7 +93,6 @@ abstract class User {
   public function name(){ return $this->name; }
   public function damages(){ return $this->damages; }
   public function asleep_for(){ return $this->asleep_for; }
-  public function isAsleep(){ return $this->isAsleep; }
   public function type(){ return $this->type; }
   public function special(){ return $this->_special; }
 

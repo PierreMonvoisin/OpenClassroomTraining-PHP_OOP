@@ -42,7 +42,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
           $userToHit = new $userToHitData['type']($userToHitData);
           if ($userToHit){
             if ($userToHit->isAsleep()){
-              $errorMessage = 'User asleep, you can\'t hit them right now !'; $error = true;
+              $errorMessage = 'User is asleep, you can\'t hit them right now !'; $error = true;
               return;
             }
             // Actually hit the other user

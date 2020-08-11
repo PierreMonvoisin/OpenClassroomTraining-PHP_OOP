@@ -51,15 +51,31 @@
             <?php } ?>
           </div>
         </div>
-        <?php $bg_color = '#C1C1C1';
+        <?php
+        $bg_color = '#C1C1C1';
+        $defaultHitText = 'Simple hit that deal 5 damages to your opponent.';
+        $specialHitText = 'Special hit';
         if ($user->type() == 'wizard'){
           $bg_color = '#5CC146';
+          $specialHitText = 'A spell that hit for less damage but has a chance to put your target asleep.';
         }
         else if ($user->type() == 'warrior'){
           $bg_color = '#58463C';
+          $specialHitText = 'You have a chance to block incoming attacks for a third of the damage.';
         } ?>
-        <div class="col-5 d-flex text-white py-2" style="background-color: <?= $bg_color ?>;border-radius: 0.3rem;">
-          <h4 class="text-center mx-auto"><u><?= htmlspecialchars(strtoupper($user->type())) ?></u></h4>
+        <div class="col-5 text-white p-2" style="background-color: <?= $bg_color ?>;border-radius: 0.3rem;">
+          <h4 class="text-center"><u><?= htmlspecialchars(strtoupper($user->type())) ?></u></h4>
+          <div class="d-flex flex-wrap">
+            <p class="col-3 text-center px-0">Hit :</p>
+            <p class="col-9"><?= $defaultHitText ?></p>
+            <p class="col-3 text-center px-0">Special :</p>
+            <p class="col-9"><?= $specialHitText ?></p>
+            <?php if ($user->isAsleep()){ ?>
+              <p class="col-3 text-center px-0">Asleep <wbr>Until</p>
+              <?php $revival = $user->displayRevivalDate(); ?>
+              <p class="col-9">The <?= $revival['date'] ?><br>At <?= $revival['time'] ?></p>
+            <?php } ?>
+          </div>
         </div>
       </div>
       <form class="w-100" action="#" method="post">
