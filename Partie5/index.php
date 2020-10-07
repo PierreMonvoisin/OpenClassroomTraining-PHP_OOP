@@ -73,7 +73,7 @@
             <?php if ($user->isAsleep()){ ?>
               <p class="col-3 text-center px-0">Asleep <wbr>Until</p>
               <?php $revival = $user->displayRevivalDate(); ?>
-              <p class="col-9">The <?= $revival['date'] ?><br>At <?= $revival['time'] ?></p>
+              <p class="col-9">The <?= htmlspecialchars($revival['date']) ?><br>At <?= htmlspecialchars($revival['time']) ?></p>
             <?php } ?>
           </div>
         </div>

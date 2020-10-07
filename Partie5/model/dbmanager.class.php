@@ -118,6 +118,21 @@ final class Dbmanager {
     } catch (PDOException $e) { return $e->getMessage(); }
   }
 
+  // Add action to log in the database
+  private function addToLog(int $userID,string $action){
+    $timestamp = time();
+    try {
+      var_dump(self::$_database);
+      // Prepare statement with parameters
+      $stmt = self::$_database->prepare('INSERT INTO `log` (`user_id`,`action`,`timestamp`) VALUES (:user_id, :action, :date_time)');
+      // Bind all parameters safely
+      $stmt->bindValue(':user_id', $userID, PDO::PARAM_INT);
+      $stmt->bindValue(':action', $action, PDO::PARAM_STR);
+      $stmt->bindValue(':date_time', $timestamp, PDO::PARAM_INT);
+      // Return the execute() return value
+      return $stmt->execute();
+    } catch (PDOException $e) { return $e->getMessage(); }
+  }
   // Constructor
   public function __construct() {
     // If the static var "database" is null, setup a new connection to the database
