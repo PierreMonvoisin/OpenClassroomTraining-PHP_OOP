@@ -12,6 +12,7 @@ $userConnected = false;
 
 // At each post form submit
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+
   // If the user wants to disconnect
   if (isset($_POST['disconnect'])){
     // Destroy the session and bring it to the home page
@@ -19,6 +20,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     header('Location: /Partie5/');
     exit();
   }
+
   // If the user wants to hit another player
   if (isset($_POST['hitPlayer']) || isset($_POST['spell'])){
     $hitType = 'default';
@@ -141,6 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
       $errorMessage = 'Error with the database, please retry later'; $error = true;
       return;
     }
+    var_dump($userData);
     $user = new $userData['type']($userData);
     if ($user){
       // If all info are found, connect the user

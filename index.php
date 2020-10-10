@@ -12,6 +12,6 @@
     <h3><a href="Partie4/index.php">Partie 4 - Héritage</a></h3>
     <h3><a href="Partie5/index.php">Partie 5 - TP Jeu de combat ( avec héritage )</a></h3>
     <h3><a href="Partie6/index.php">Partie 6 - Interfaces</a></h3>
-    <h3><a href="Partie7/index.php">Partie 7 - Exceptions</a></h3>
+    <h3><a href="TP_final/index.php">TP final Programmation Orienté Objets</a></h3>
   </body>
 </html>

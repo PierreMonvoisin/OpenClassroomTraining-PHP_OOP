@@ -1,7 +1,7 @@
 <?php
 abstract class User {
   // Attributes / Properties
-  protected $id, $name, $damages, $asleep_for, $type;
+  protected $id, $name, $damages, $asleep_for, $type, $exp;
   protected $isAsleep = false;
   private $_special;
 
@@ -68,11 +68,11 @@ abstract class User {
     $methodCalled = 0;
     // For each value in the array of data
     foreach ($data as $key => $value){
-      // Create a method string with the key
+      // Create a method name string with the key
       $method = 'set'. ucfirst($key);
       // Check if method exists
       if (method_exists($this, $method)){
-        // Executre method with value from data
+        // Execute method with value from data
         $this->$method($value);
         $methodCalled++;
       }
@@ -94,6 +94,7 @@ abstract class User {
   public function damages(){ return $this->damages; }
   public function asleep_for(){ return $this->asleep_for; }
   public function type(){ return $this->type; }
+  public function exp(){ return $this->exp; }
   public function special(){ return $this->_special; }
 
   // Setters
@@ -116,6 +117,10 @@ abstract class User {
   public function setType(string $type){
     if (empty(trim($type)) || ! is_string($type)){ return false; }
     $this->type = trim($type); return true;
+  }
+  public function setExp(int $exp){
+    if (is_NaN($exp) || $exp < 0){ return false; }
+    $this->exp = intval($exp); return true;
   }
   public function setSpecial(int $special){
     if (is_NaN($special) || $special < 0 || $special > 10){ return false; }

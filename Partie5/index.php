@@ -6,9 +6,18 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+  <style>
+    progress[value]::-moz-progress-bar, progress {
+      border-radius: 0.25rem;
+    }
+    #expProgress::-moz-progress-bar {
+      background-color: green;
+    }
+  </style>
 </head>
 <body class="container-fluid w-50 pt-5">
   <div class="jumbotron p-5 mt-2">
+    <!-- If the user is connected -->
     <?php if ($userConnected || isset($_SESSION['userConnected'])){
       if (isset($_SESSION['userConnected'])) { $user = $_SESSION['userConnected']; }?>
       <h2 class="text-center mb-3"><u>Combat Game</u></h2>
@@ -18,13 +27,19 @@
         <h4 class="text-center text-success py-3"><?= htmlspecialchars($validMessage) ?></h4>
       <?php } ?>
       <div class="w-100 d-flex flex-wrap">
+        <!-- User account header -->
         <div class="col-12 bg-secondary pt-2 mt-2 mb-3" style="border-radius: 0.3rem;">
           <h3 class="text-center text-white"><?=  htmlspecialchars($user->name()) ?></h3>
+          <!-- EXP -->
+          <label class="text-center d-block text-white" for="expProgress">EXP : 50 / 100</label>
+          <progress id="expProgress" class="w-100" style="height: 1vh;" min="0" max="100" value="50">50</progress>
+          <!-- Damages -->
           <div class="w-100 py-3">
             <label class="text-center d-block text-white" for="damagesProgress">Amount of damages : <?= htmlspecialchars($user->damages()) ?>% </label>
             <progress id="damagesProgress" class="w-100" style="height: 3vh;" min="0" max="100" value="<?= htmlspecialchars($user->damages()) ?>"> <?= htmlspecialchars($user->damages()) ?> damages </progress>
           </div>
         </div>
+        <!-- Users list -->
         <div class="col-7 d-flex" style="background-color: #C1C1C1; border-radius: 0.3rem;">
           <div class="list-group m-auto w-100 py-2">
             <?php foreach ($manager->userList() as $users){
@@ -63,6 +78,7 @@
           $bg_color = '#58463C';
           $specialHitText = 'You have a chance to block incoming attacks for a third of the damage.';
         } ?>
+        <!-- User stats -->
         <div class="col-5 text-white p-2" style="background-color: <?= $bg_color ?>;border-radius: 0.3rem;">
           <h4 class="text-center"><u><?= htmlspecialchars(strtoupper($user->type())) ?></u></h4>
           <div class="d-flex flex-wrap">
@@ -82,6 +98,7 @@
         <input type="submit" class="btn btn-dark btn-block mt-3 mx-auto w-50" name="disconnect" value="Disconnect from account">
       </form>
     <?php } else { ?>
+    <!-- If the user is not connected -->
       <h3 class="text-center"><u>Welcome To The Jungle, my friend !</u></h3>
       <p class="text-center">Nombre de personne enregistré : <?= $manager->countUsers() ?: 0; ?></p>
       <?php if ($error) { ?>
