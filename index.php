@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <title>PHP OOP Table</title>
-    <style>a { display: inline-block; width: 100%; text-align: center; }</style>
+    <style>a { display: inline-block; width: 100%; text-align: center; color: black; }</style>
   </head>
   <body>
     <h3><a href="Partie1/index.php">Partie 1 - La base de POO</a></h3>
